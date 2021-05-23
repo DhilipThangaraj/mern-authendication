@@ -6,6 +6,32 @@ require("dotenv").config();
 
 const app = express();
 
+/**
+ * @summary - connect to db
+ * @param {Function} mongoose.connect - This method helps to connect to db which take two params.
+ * @param {string} url - which comes from .env
+ * @param {Object}
+ * @param {property} useNewUrlParser - which helps to avoid the deprecated warning.
+ * @param {property} useFindAndModify - which helps to avoid the deprecated warning.
+ * @param {property} useUnifiedTopology - which helps to avoid the deprecated warning.
+ * @param {property} useCreateIndex - which helps to avoid the deprecated warning.
+ * @returns {Promise}
+ */
+
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
+  .then(() => {
+    console.log("########DB Connected###########");
+  })
+  .catch((err) => {
+    console.log("*********DB connection error*****************", err);
+  });
+
 //Import routes
 const authRoutes = require("./routes/auth");
 
