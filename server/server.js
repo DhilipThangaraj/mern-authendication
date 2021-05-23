@@ -2,14 +2,15 @@ const express = require("express");
 
 const app = express();
 
-app.get("/api/signup", (req, res) => {
-  res.json({
-    data: "Hey, You hit a signup endpoint.",
-  });
-});
+//Import routes
+const authRoutes = require("./routes/auth");
+
+//Applying middleware
+app.use("/api", authRoutes);
 
 const port = process.env.PORT || 8000;
 
+//Listening port
 app.listen(port, () => {
   console.log(`API is running on ${port}`);
 });

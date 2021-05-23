@@ -18,7 +18,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start-dev": "nodemon server.js"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
