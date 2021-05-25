@@ -1,13 +1,14 @@
 import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
 
 const Layout = ({ children }) => {
   const nav = () => {
     return (
       <ul className="nav nav-tabs bg-primary">
         <li className="nav-item">
-          <a href="/" className="text-light nav-link">
+          <Link href="/" className="text-light nav-link">
             Home
-          </a>
+          </Link>
         </li>
       </ul>
     );
