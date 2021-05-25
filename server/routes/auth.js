@@ -3,6 +3,8 @@ const router = express.Router();
 
 //import signup controller
 const { signup } = require("../controllers/auth");
+//Import account activation controller
+const { accountActivation } = require("../controllers/auth");
 
 //import validators
 /**
@@ -15,5 +17,6 @@ const { userSignUpValidator } = require("../validators/auth");
 const { runValidation } = require("../validators");
 
 router.post("/signup", userSignUpValidator, runValidation, signup);
+router.post("/account-activation", accountActivation);
 
 module.exports = router;
