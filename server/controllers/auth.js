@@ -47,7 +47,8 @@ const user = require("../models/user");
 /**
  *
  * @summary Before keeping the user details into the DB. First we should get email activation link in
- * our email then once we get activate the link then user details will be stored in the database.
+ * our email then once we get activate the link then user details will be stored in the database by clicking the link
+ * that happens in the account-activation controller.
  *
  * @Note - Basically we are running with smtp server to make the email link.
  * @Note - For further clarity refer npm node mailer official documentation.
@@ -114,6 +115,14 @@ exports.signup = async (req, res) => {
     );
   });
 };
+
+/**
+ *@summary extract the user details from jwt token and stores it in db.
+ * @param {Object} req - One of the property is jwt token which has name,pwd and email.
+ * @param {Object} res
+ * @param {Function} jwt.verify - verifies the token signature with jwt_account_activation signature.
+ * @returns - json object with error code depends on the condition.
+ */
 
 exports.accountActivation = (req, res) => {
   const { token } = req.body;
