@@ -117,7 +117,7 @@ exports.signup = async (req, res) => {
 };
 
 /**
- *@summary extract the user details from jwt token and stores it in db.
+ * @summary extract the user details from jwt token and stores it in db.
  * @param {Object} req - One of the property is jwt token which has name,pwd and email.
  * @param {Object} res
  * @param {Function} jwt.verify - verifies the token signature with jwt_account_activation signature.
