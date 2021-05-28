@@ -3,6 +3,8 @@ import { Link, withRouter } from "react-router-dom";
 import { isAuth, signout } from "../auth/helpers";
 
 const Layout = ({ children, match, history }) => {
+  const userName = isAuth().name || "";
+
   const isActive = (path) => {
     if (match.path === path) {
       return {
@@ -49,9 +51,14 @@ const Layout = ({ children, match, history }) => {
         ) : (
           <Fragment>
             <li className="nav-item">
+              <Link to="/" className="nav-link" style={isActive("/")}>
+                {userName}
+              </Link>
+            </li>
+            <li className="nav-item">
               <span
                 className="nav-link"
-                style={isActive("/")}
+                style={{ cursor: "pointer", color: "#fff" }}
                 onClick={() => {
                   signout(() => {
                     history.push("/");
