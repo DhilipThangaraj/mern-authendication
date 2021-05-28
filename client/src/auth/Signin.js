@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../core/Layout";
+import { authendicate } from "./helpers";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,14 +28,16 @@ const Signin = () => {
     })
       .then((response) => {
         console.log("SIGNIN SUCCESS", response);
-        //Save the response (user and token) in localStorage/cookie
-        setValues({
-          ...values,
-          email: "",
-          password: "",
-          buttonText: "Submitted",
+        authendicate(response, () => {
+          //Save the response (user and token) in localStorage/cookie
+          setValues({
+            ...values,
+            email: "",
+            password: "",
+            buttonText: "Submitted",
+          });
+          toast.success(`Hey ${response.data.user.name},Welcome back`);
         });
-        toast.success(`Hey ${response.data.user.name},Welcome back`);
       })
       .catch((error) => {
         console.log("SIGNIN ERROR", error.response.data);
