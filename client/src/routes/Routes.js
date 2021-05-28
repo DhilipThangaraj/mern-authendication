@@ -5,6 +5,8 @@ import Signin from "../auth/Signin";
 import Activate from "../auth/Activate";
 import Private from "../auth/Private";
 import PrivateRoute from "../routes/PrivateRoute";
+import Admin from "../auth/Admin";
+import AdminRoute from "../routes/AdminRoute";
 
 const Routes = () => {
   return (
@@ -15,6 +17,7 @@ const Routes = () => {
         <Route exact path="/signin" component={Signin} />
         <Route exact path="/auth/activate/:token" component={Activate} />
         <PrivateRoute exact path="/private" component={Private} />
+        <AdminRoute exact path="/admin" component={Admin} />
       </Switch>
     </BrowserRouter>
   );
