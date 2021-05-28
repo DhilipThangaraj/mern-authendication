@@ -69,3 +69,11 @@ export const authendicate = (response, next) => {
   setLocalStorage("user", response.data.user);
   next();
 };
+
+//Signout functionality
+
+export const signout = (next) => {
+  removeCookie("token");
+  removeLocalStorage("user");
+  next();
+};
