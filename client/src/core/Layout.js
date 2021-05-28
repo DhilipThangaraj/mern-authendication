@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
+import { isAuth } from "../auth/helpers";
 
 const Layout = ({ children, match }) => {
   const isActive = (path) => {
@@ -22,16 +23,30 @@ const Layout = ({ children, match }) => {
             Home
           </Link>
         </li>
-        <li className="nav-item">
-          <Link to="/signin" className="nav-link" style={isActive("/signin")}>
-            Signin
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/signup" className="nav-link" style={isActive("/signup")}>
-            Signup
-          </Link>
-        </li>
+
+        {!isAuth() && (
+          <Fragment>
+            <li className="nav-item">
+              <Link
+                to="/signin"
+                className="nav-link"
+                style={isActive("/signin")}
+              >
+                Signin
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link
+                to="/signup"
+                className="nav-link"
+                style={isActive("/signup")}
+              >
+                Signup
+              </Link>
+            </li>
+          </Fragment>
+        )}
       </ul>
     );
   };
