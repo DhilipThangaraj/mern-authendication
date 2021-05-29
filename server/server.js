@@ -34,6 +34,7 @@ mongoose
 
 //Import routes
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
 
 //app middlewares - which gives response in parsed manner.
 app.use(morgan("dev"));
@@ -55,6 +56,7 @@ if (process.env.NODE_ENV === "development") {
 
 //Applying middleware
 app.use("/api", authRoutes);
+app.use("/api", userRoutes);
 
 const port = process.env.PORT || 8000;
 
