@@ -1,7 +1,7 @@
 const User = require("../models/user");
 
 const jwt = require("jsonwebtoken");
-var expressJwt = require("express-jwt");
+const expressJwt = require("express-jwt");
 
 //node mailer
 const nodemailer = require("nodemailer");
@@ -202,3 +202,14 @@ exports.signin = (req, res) => {
     });
   });
 };
+
+/**
+ * @summary - This is for protecting api route which checks the token has the valid secret.
+ * @Note - This function if we apply in the route you will get the user id as req.user.id in th controller call
+ * @returns {Object} user info
+ */
+
+exports.requireSignin = expressJwt({
+  secret: process.env.JWT_SIGNIN_SECRET,
+  algorithms: ["HS256"],
+});
