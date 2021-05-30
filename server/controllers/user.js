@@ -49,7 +49,7 @@ exports.update = (req, res) => {
       }
       updatedUser.hashed_password = undefined;
       updatedUser.salt = undefined;
-      return res.json(updatedUser);
+      res.json(updatedUser);
     });
   });
 };
