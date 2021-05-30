@@ -3,7 +3,7 @@ import Layout from "../core/Layout";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { isAuth, getCookie, signout } from "./helpers";
+import { isAuth, getCookie, signout, updateUser } from "./helpers";
 
 const Private = ({ history }) => {
   const [values, setValues] = useState({
@@ -62,17 +62,19 @@ const Private = ({ history }) => {
     })
       .then((response) => {
         console.log("PRIVATE PROFILE UPDATE SUCCESS ", response);
-        setValues({
-          ...values,
-          buttonText: "Submitted",
-        });
-        toast.success("Profile updated successfully");
-        setTimeout(() => {
+        updateUser(response, () => {
           setValues({
             ...values,
-            buttonText: "Submit",
+            buttonText: "Submitted",
           });
-        }, 5000);
+          toast.success("Profile updated successfully");
+          setTimeout(() => {
+            setValues({
+              ...values,
+              buttonText: "Submit",
+            });
+          }, 5000);
+        });
       })
       .catch((error) => {
         console.log("PRIVATE PROFILE UPDATE ERROR", error.response.data.error);

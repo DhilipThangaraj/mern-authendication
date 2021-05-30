@@ -77,3 +77,16 @@ export const signout = (next) => {
   removeLocalStorage("user");
   next();
 };
+
+//Update the user details in Local storage when profile update page gets submitted
+
+export const updateUser = (response, next) => {
+  console.log("UPDATE USER IN LOCAL STORAGE", response);
+
+  if (typeof window !== "undefined") {
+    let auth = JSON.parse(localStorage.getItem("user"));
+    auth = response.data;
+    localStorage.setItem("user", JSON.stringify(auth));
+  }
+  next();
+};
