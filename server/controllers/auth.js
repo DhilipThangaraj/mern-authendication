@@ -207,9 +207,33 @@ exports.signin = (req, res) => {
  * @summary - This is for protecting api route which checks the token has the valid secret.
  * @Note - This function if we apply in the route you will get the user id as req.user.id in th controller call
  * @returns {Object} user info
+ * @Note - This middleware protects the authendic user (subscriber).
  */
 
 exports.requireSignin = expressJwt({
   secret: process.env.JWT_SIGNIN_SECRET,
   algorithms: ["HS256"],
 });
+
+/**
+ * @summary - This middleware protects the authendic user who has role of admin.
+ */
+
+exports.adminMiddleware = (req, res, next) => {
+  User.findById({ _id: req.user._id }).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: "User not found",
+      });
+    }
+
+    if (user.role !== "admin") {
+      return res.status(400).json({
+        error: "Admin resource.Access denied",
+      });
+    }
+
+    req.profile = user;
+    next();
+  });
+};
