@@ -5,7 +5,6 @@ const expressJwt = require("express-jwt");
 
 //node mailer
 const nodemailer = require("nodemailer");
-const user = require("../models/user");
 
 /**
  * @summary Save the brand new user's name, email and password in db.
@@ -237,3 +236,65 @@ exports.adminMiddleware = (req, res, next) => {
     next();
   });
 };
+
+exports.forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+
+  User.findOne({ email }, async (err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: "User with the email does not exsist",
+      });
+    }
+
+    // process.env.JWT_ACCOUNT_ACTIVATION - activation key
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_RESET_PASSWORD, {
+      expiresIn: "10m",
+    });
+
+    let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: testAccount.user, // generated ethereal user
+        pass: testAccount.pass, // generated ethereal password
+      },
+    });
+
+    // send mail with defined transport object
+    transporter.sendMail(
+      {
+        from: '"Fred Foo 👻" <foo@example.com>', // sender address
+        to: `${email}`, // list of receivers
+        subject: `Password reset link`, // Subject line
+        text: "Sign Up ", // plain text body
+        html: `
+                <h1>Please use the following link to reset your password</h1>
+                <a href=${process.env.CLIENT_URL}/auth/password/reset/${token} target="_blank">Activation Link</a>
+                <hr />
+                <p>This email may contain sensetive information</p>
+                <p>${process.env.CLIENT_URL}</p>
+            `,
+      },
+      (err, data) => {
+        if (err) {
+          return res.json({
+            message: "Email has been failed to sent.",
+          });
+        }
+        console.log("reset password data", data);
+        console.log("Message sent: %s", data.messageId);
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(data));
+        return res.json({
+          message: `Email has been sent to ${email}. Follow the instruction to reset your account.`,
+        });
+      }
+    );
+  });
+};
+
+exports.resetPassword = (req, res, next) => {};
