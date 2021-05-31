@@ -2,6 +2,7 @@ const User = require("../models/user");
 
 const jwt = require("jsonwebtoken");
 const expressJwt = require("express-jwt");
+const _ = require("lodash");
 
 //node mailer
 const nodemailer = require("nodemailer");
@@ -318,4 +319,56 @@ exports.forgotPassword = async (req, res, next) => {
   });
 };
 
-exports.resetPassword = (req, res, next) => {};
+/**
+ * @summary - Resetting the password.
+ * @param {property} resetPasswordLink - token generated during forgot-password.
+ * @param {property} newPassword - which is entered from client password to reset.
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @param {Function} _.extend - is the function which extend the object and put some property in it.
+ */
+
+exports.resetPassword = (req, res, next) => {
+  const { resetPasswordLink, newPassword } = req.body;
+
+  if (resetPasswordLink) {
+    jwt.verify(
+      resetPasswordLink,
+      process.env.JWT_RESET_PASSWORD,
+      function (err, decoded) {
+        if (err) {
+          return res.status(400).json({
+            error: "Expired Link. Try again",
+          });
+        }
+
+        User.findOne({ resetPasswordLink }, (err, user) => {
+          if (err || !user) {
+            return res.status(400).json({
+              error: "Something went wrong.Try later",
+            });
+          }
+
+          const updatedFields = {
+            password: newPassword,
+            resetPasswordLink: "",
+          };
+
+          user = _.extend(user, updatedFields);
+
+          user.save((err, result) => {
+            if (err) {
+              return res.status(400).json({
+                error: "Error reseting user password",
+              });
+            }
+            res.json({
+              message: "Great!, You can now login with new password",
+            });
+          });
+        });
+      }
+    );
+  }
+};
