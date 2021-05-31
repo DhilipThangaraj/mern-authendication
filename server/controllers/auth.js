@@ -237,6 +237,15 @@ exports.adminMiddleware = (req, res, next) => {
   });
 };
 
+/**
+ * @summary - Basically gets the email id from the user to reset the pwd.
+ * @param {Function} forgotPassword - This function send the id wrapped token to users.
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns - send the email to reset the password.
+ */
+
 exports.forgotPassword = async (req, res, next) => {
   const { email } = req.body;
 
@@ -289,8 +298,20 @@ exports.forgotPassword = async (req, res, next) => {
         console.log("reset password data", data);
         console.log("Message sent: %s", data.messageId);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(data));
-        return res.json({
-          message: `Email has been sent to ${email}. Follow the instruction to reset your account.`,
+
+        // Keeping the token with the user model at the resetPasswordLink property before showing email has been sent text.
+        return user.updateOne({ resetPasswordLink: token }, (err, success) => {
+          if (err) {
+            console.log("RESET PASSWORD LINK ERROR", err);
+            return res.status(400).json({
+              error:
+                "Database connection error on user password forgot request",
+            });
+          } else {
+            return res.json({
+              message: `Email has been sent to ${email}. Follow the instruction to reset your account.`,
+            });
+          }
         });
       }
     );
