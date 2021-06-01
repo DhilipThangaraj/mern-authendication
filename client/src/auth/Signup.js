@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Redirect, Link } from "react-router-dom";
 import Layout from "../core/Layout";
 import { isAuth } from "./helpers";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
