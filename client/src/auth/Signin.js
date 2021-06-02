@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Redirect, Link } from "react-router-dom";
 import Layout from "../core/Layout";
 import { authendicate, isAuth } from "./helpers";
+import Google from "./Google";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -84,6 +85,7 @@ const Signin = ({ history }) => {
         <ToastContainer />
         {isAuth() ? <Redirect to="/" /> : null}
         <h1 className="p-5 text-center">Signin</h1>
+        <Google />
         {signinForm()}
         <br />
         <Link
