@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const expressJwt = require("express-jwt");
 const _ = require("lodash");
 const { OAuth2Client } = require("google-auth-library");
+const nodeFetch = require("node-fetch");
 
 //node mailer
 const nodemailer = require("nodemailer");
@@ -379,6 +380,11 @@ exports.resetPassword = (req, res, next) => {
   }
 };
 
+/**
+ * @summary - google signin. If user found in same email when google sign in that time exsisting will be used.
+ *
+ */
+
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 exports.googleLogin = (req, res) => {
@@ -450,5 +456,85 @@ exports.googleLogin = (req, res) => {
         });
       }
     })
-    .catch(() => {});
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+/**
+ * @summary - facebook login as similar as google login.
+ * @param {property} url - which gives whatever we are mentioning as part of fields which means user information.
+ *
+ */
+
+exports.facebookLogin = (req, res) => {
+  const { userID, accessToken } = req.body;
+
+  const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
+
+  return fetch(url, {
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((response) => {
+      const { email, name } = response;
+
+      User.findOne({ email }).exec((err, user) => {
+        if (user) {
+          const token = jwt.sign(
+            { _id: user._id },
+            process.env.JWT_SIGNIN_SECRET,
+            { expiresIn: "7d" }
+          );
+
+          const { name, email, role, _id } = user;
+
+          return res.json({
+            token,
+            user: {
+              name,
+              email,
+              role,
+              _id,
+            },
+          });
+        } else {
+          let password = email + process.env.JWT_SIGNIN_SECRET;
+
+          user = new User({ name, email, password });
+
+          user.save((err, data) => {
+            if (err) {
+              console.log("ERROR FACEBOOK LOGIN ON SAVE", err);
+              return res.status(400).json({
+                error: "USER SIGNUP FAILED WITH FACEBOOK",
+              });
+            }
+
+            const token = jwt.sign(
+              { _id: data._id },
+              process.env.JWT_SIGNIN_SECRET,
+              { expiresIn: "7d" }
+            );
+
+            const { name, email, role, _id } = data;
+
+            return res.json({
+              token,
+              user: {
+                name,
+                email,
+                role,
+                _id,
+              },
+            });
+          });
+        }
+      });
+    })
+    .catch((error) => {
+      res.json({
+        error: "Error facebook login failed",
+      });
+    });
 };
