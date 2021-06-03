@@ -30,6 +30,7 @@ const Google = ({ informParent = (f) => f }) => {
         onFailure={responseGoogle}
         render={(renderProps) => (
           <button
+            style={{ background: "#7FFFD4", color: "red" }}
             onClick={renderProps.onClick}
             disabled={renderProps.disabled}
             className="btn btn-danger btn-lg btn-block"
