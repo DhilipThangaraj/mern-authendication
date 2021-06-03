@@ -1,9 +1,8 @@
 import React from "react";
 import GoogleLogin from "react-google-login";
-import { authendicate, isAuth } from "./helpers";
 import axios from "axios";
 
-const Google = () => {
+const Google = ({ informParent = (f) => f }) => {
   const responseGoogle = (response) => {
     console.log(response);
 
@@ -15,6 +14,7 @@ const Google = () => {
       .then((res) => {
         console.log("GOOGLE SIGNIN SUCCESS", res);
         //Inform Parent Component
+        informParent(res);
       })
       .catch((error) => {
         console.log("GOOGLE SIGNIN ERROR", error);
