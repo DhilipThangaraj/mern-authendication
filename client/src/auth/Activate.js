@@ -35,7 +35,6 @@ const Activate = ({ match }) => {
     })
       .then((response) => {
         console.log("ACCOUNT ACTIVATION SUCCESS", response);
-        //Save the response (user and token) in localStorage/cookie
         setValues({
           ...values,
           show: false,

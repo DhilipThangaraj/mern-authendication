@@ -21,6 +21,7 @@ const Signin = ({ history }) => {
     setValues({ ...values, [name]: event.target.value });
   };
 
+  //This function only has been used for facebook and google login.
   const informParent = (response) => {
     authendicate(response, () => {
       //Save the response (user and token) in localStorage/cookie
