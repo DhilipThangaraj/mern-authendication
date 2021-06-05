@@ -472,7 +472,7 @@ exports.facebookLogin = (req, res) => {
 
   const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
 
-  return fetch(url, {
+  return nodeFetch(url, {
     method: "GET",
   })
     .then((response) => response.json())
